@@ -4,33 +4,38 @@
     "year": "2018",
     "month": "February",
     "kms": "300",
-    "days": "3"
+    "days": "3",
+    "image": "madurai.jpg"
 }, {
     "id": 2,
     "place": "Switzerland",
     "year": "2018",
     "month": "June",
     "kms": "3000",
-    "days": "4"
+    "days": "4",
+    "image": "switzerland.jpg"
 }, {
     "id": 3,
     "place": "Auckland",
     "year": "2018",
     "month": "December",
     "kms": "1500",
-    "days": "5"
+    "days": "5",
+    "image": "auckland.jpg"
 }, {
     "id": 4,
     "place": "Thailand",
     "year": "2019",
     "month": "February",
     "kms": "550",
-    "days": "3"
+    "days": "3",
+    "image": "thailand.jpg"
 }, {
     "id": 5,
     "place": "Maldives",
     "year": "2019",
     "month": "March",
     "kms": "750",
-    "days": "3"
+    "days": "3",
+    "image": "maldives.jpg"
 }]

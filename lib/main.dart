@@ -133,7 +133,8 @@ class _TripListState extends State<TripList>
                               trips[index]['year'],
                               trips[index]['month'],
                               trips[index]['days'],
-                              trips[index]['kms']);
+                              trips[index]['kms'],
+                              "assets/" + trips[index]['image']);
                         },
                         itemCount: trips == null ? 0 : trips.length,
                       );
@@ -175,114 +176,138 @@ class _TripListState extends State<TripList>
     );
   }
 
-  getInterviewTile(
-      String name, String year, String month, String numDays, String numKms) {
+  getInterviewTile(String name, String year, String month, String numDays,
+      String numKms, String imageUrl) {
     return Card(
       child: Container(
-        padding: EdgeInsets.only(left: 20.0, right: 10.0),
-        color: Colors.black87,
         alignment: Alignment.topLeft,
         width: MediaQuery.of(context).size.width,
         height: 200,
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 45.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  name,
-                  style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(35)),
+        decoration: BoxDecoration(
+          image:
+              DecorationImage(image: AssetImage(imageUrl), fit: BoxFit.cover),
+        ),
+        child: Container(
+          color: Colors.black87,
+          padding: EdgeInsets.only(left: 20.0, right: 10.0),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 45.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    name,
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white),
                   ),
-                  child: Container(
+                  Container(
                     decoration: BoxDecoration(
-                      color: Colors.black87,
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(35)),
                     ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_forward,
-                        size: 30.0,
-                        color: Colors.white,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black87,
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
-                      onPressed: () {},
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          size: 30.0,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          return showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Trip Detail"),
+                                  content:
+                                      Text("Clicked, Still in development"),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text("OK"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(year,
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
+                      Text(month,
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white54)),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(numDays,
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
+                      Text('days',
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white54)),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(numKms,
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
+                      Text('kilometers',
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white54)),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.people,
+                      color: Colors.white,
+                      size: 25.0,
                     ),
                   ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(year,
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white)),
-                    Text(month,
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white54)),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(numDays,
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white)),
-                    Text('days',
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white54)),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(numKms,
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white)),
-                    Text('kilometers',
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white54)),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.people,
-                    color: Colors.white,
-                    size: 25.0,
-                  ),
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
