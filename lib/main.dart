@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -21,23 +23,26 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: MyHomePage(title: 'Flutter Demo Home Page'),
-      home: InterviewList(),
+      home: TripList(),
     );
   }
 }
 
-class InterviewList extends StatefulWidget {
+class TripList extends StatefulWidget {
   @override
-  _InterviewListState createState() => _InterviewListState();
+  _TripListState createState() => _TripListState();
 }
 
-class _InterviewListState extends State<InterviewList>
+class _TripListState extends State<TripList>
     with SingleTickerProviderStateMixin {
   TabController interviewPageTabController;
+  Map<String, dynamic> tripList;
+  List data;
 
   @override
   void initState() {
     interviewPageTabController = TabController(vsync: this, length: 2);
+    // tripList = json.decode(tripsJson);
     super.initState();
   }
 
@@ -45,45 +50,102 @@ class _InterviewListState extends State<InterviewList>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('InteviewSteps'),
+        backgroundColor: Color.fromARGB(255, 0, 46, 61),
+        elevation: 0.0,
+        title: Row(
+          children: <Widget>[
+            Icon(
+              Icons.access_time,
+              size: 35.0,
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+            Text(
+              'tripsteps',
+              style: TextStyle(
+                  fontFamily: '', fontWeight: FontWeight.w800, fontSize: 30.0),
+            ),
+          ],
+        ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(
+              Icons.add,
+              size: 30.0,
+            ),
             onPressed: () {},
           ),
           IconButton(
               onPressed: () {},
               icon: Icon(
                 Icons.settings,
+                size: 30.0,
               ))
         ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          TabBar(
-            controller: interviewPageTabController,
-            labelColor: Colors.black,
-            tabs: <Widget>[
-              Tab(
-                child: Text('INTEVIEWS'),
+          SizedBox(
+            height: 10.0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 0, 46, 61),
               ),
-              Tab(
-                child: Text('STATISTICS'),
-              ),
-            ],
+            ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height - 128.0,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 0, 157, 204),
+            ),
+            child: TabBar(
+              controller: interviewPageTabController,
+              labelColor: Colors.white,
+              labelStyle:
+                  TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
+              tabs: <Widget>[
+                Tab(
+                  child: Text('INTEVIEWS'),
+                ),
+                Tab(
+                  child: Text('STATISTICS'),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height - 138.0,
             child: TabBarView(
               controller: interviewPageTabController,
               children: <Widget>[
-                ListView(
-                  children: <Widget>[
-                    getInterviewTile('Madurai', '2018', 'February', '3', '0'),
-                    getInterviewTile(
-                        'Switzerland', '2018', 'January', '4', '0'),
-                  ],
+                Container(
+                  child: FutureBuilder(
+                    future: DefaultAssetBundle.of(context)
+                        .loadString('load_json/trips.json'),
+                    builder: (context, snapshot) {
+                      // Decode Json
+                      var trips = json.decode(snapshot.data.toString());
+                      return ListView.builder(
+                        itemBuilder: (BuildContext context, int index) {
+                          return getInterviewTile(
+                              trips[index]['place'],
+                              trips[index]['year'],
+                              trips[index]['month'],
+                              trips[index]['days'],
+                              trips[index]['kms']);
+                        },
+                        itemCount: trips == null ? 0 : trips.length,
+                      );
+                    },
+                  ),
+                  // child: ListView(
+                  //   children: <Widget>[
+                  //     getInterviewTile('Madurai', '2018', 'February', '3', '0'),
+                  //     getInterviewTile(
+                  //         'Switzerland', '2018', 'January', '4', '0'),
+                  //   ],
+                  // ),
                 ),
                 Text('Statistics')
               ],
@@ -115,75 +177,113 @@ class _InterviewListState extends State<InterviewList>
 
   getInterviewTile(
       String name, String year, String month, String numDays, String numKms) {
-    return Container(
-      alignment: Alignment.topLeft,
-      width: MediaQuery.of(context).size.width,
-      height: 200,
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 45.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                name,
-                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w800),
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_right),
-                onPressed: () {},
-              )
-            ],
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Row(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(year,
-                          style: TextStyle(
-                              fontSize: 10.0, fontWeight: FontWeight.w600)),
-                      Text(month,
-                          style: TextStyle(
-                              fontSize: 8.0, fontWeight: FontWeight.w500)),
-                    ],
+    return Card(
+      child: Container(
+        padding: EdgeInsets.only(left: 20.0, right: 10.0),
+        color: Colors.black87,
+        alignment: Alignment.topLeft,
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 45.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  name,
+                  style: TextStyle(
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(35)),
                   ),
-                  Column(
-                    children: <Widget>[
-                      Text(numDays,
-                          style: TextStyle(
-                              fontSize: 10.0, fontWeight: FontWeight.w600)),
-                      Text('Days',
-                          style: TextStyle(
-                              fontSize: 8.0, fontWeight: FontWeight.w500)),
-                    ],
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black87,
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        size: 30.0,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {},
+                    ),
                   ),
-                  Column(
-                    children: <Widget>[
-                      Text(numKms,
-                          style: TextStyle(
-                              fontSize: 10.0, fontWeight: FontWeight.w600)),
-                      Text('Kilometers',
-                          style: TextStyle(
-                              fontSize: 8.0, fontWeight: FontWeight.w500)),
-                    ],
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.people),
-              ),
-            ],
-          )
-        ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(year,
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white)),
+                    Text(month,
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white54)),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(numDays,
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white)),
+                    Text('days',
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white54)),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(numKms,
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white)),
+                    Text('kilometers',
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white54)),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.people,
+                    color: Colors.white,
+                    size: 25.0,
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
